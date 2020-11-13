@@ -13,11 +13,39 @@ public class Product {
 	int catId;
 	BigDecimal uprice;
 
-	public Product(int id, String name, int cid, BigDecimal price) {
-		pid = id;
-		pname = name;
-		catId = cid;
-		uprice = price;
+	public Product() {
+	}
+
+	public int getPid() {
+		return pid;
+	}
+
+	public void setPid(int pid) {
+		this.pid = pid;
+	}
+
+	public String getPname() {
+		return pname;
+	}
+
+	public void setPname(String pname) {
+		this.pname = pname;
+	}
+
+	public int getCatId() {
+		return catId;
+	}
+
+	public void setCatId(int catId) {
+		this.catId = catId;
+	}
+
+	public BigDecimal getUprice() {
+		return uprice;
+	}
+
+	public void setUprice(BigDecimal uprice) {
+		this.uprice = uprice;
 	}
 
 	public JSONObject toJSONObject() {

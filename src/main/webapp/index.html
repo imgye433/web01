@@ -19,9 +19,11 @@ table {
 </style>
 </head>
 <body>
-	<h1>header</h1>
 	<div>
-		Select id, name, category id, unit price from products where id = <input
+		<select id="sd">
+		<option value="1" selected>Select</option> 
+        <option value="2">Delete</option> 
+        </select> id, name, category id, unit price from products where id = <input
 			style='width: 50px' 'type='text' id='pid'>
 		<button onclick="onExe()">execute</button>
 	</div>

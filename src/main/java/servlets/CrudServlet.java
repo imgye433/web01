@@ -42,13 +42,25 @@ public class CrudServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		String pid=request.getParameter("pid");
+		String sd=request.getParameter("sd");
+		String str = "SELECT ";
+		switch(sd) {
+		case "1":{
+			str  = "SELECT ";
+			break;
+		}
+		case "2":{
+			str  = "DELETE ";
+			break;
+		}
+		}
 		String connectionUrl = "jdbc:sqlserver://localhost:1433;" + "database=Northwind;" + "user=root;"
 				+ "password=abcd1234;";
 		JSONArray array = new JSONArray();
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Connection conn = DriverManager.getConnection(connectionUrl);
-		    try (PreparedStatement ps = conn.prepareStatement("SELECT ProductID, ProductName, CategoryID, UnitPrice FROM dbo.Products WHERE ProductID=?")) {
+		    try (PreparedStatement ps = conn.prepareStatement(str+"ProductID, ProductName, CategoryID, UnitPrice FROM dbo.Products WHERE ProductID=?")) {
 		    	ps.setObject(1, pid);
 		    	try (ResultSet rs = ps.executeQuery()) {
 		            while (rs.next()) {
@@ -56,7 +68,12 @@ public class CrudServlet extends HttpServlet {
 		                String name = rs.getString(2);
 		                int catId = rs.getInt(3);
 		                BigDecimal price = rs.getBigDecimal(4);
-		                JSONObject obj = new Product(id, name, catId, price).toJSONObject();
+		                Product prod = new Product();
+		                prod.setPid(id);
+		                prod.setPname(name);
+		                prod.setCatId(catId);
+		                prod.setUprice(price);
+		                JSONObject obj = prod.toJSONObject();
 		                array.put(obj);
 		            }
 		        }
