@@ -1,10 +1,10 @@
-function onExe(){
-	var pid = document.getElementById('pid').value;
-	var sd = document.getElementById('sd').value;
+function onExe(n){
+	var pid = document.getElementById('pid'+n).value;
 	var res = document.getElementById('results')
-	fetch('./crud?pid='+pid+'&sd='+sd)
+	fetch('./crud?pid='+pid+'&sd='+n)
 	  .then(response => response.json())
 	  .then(data => {
+	  	if(n===1){
 	  	data.forEach((d)=>{
 	  		var ele = document.createElement('tr');
 			ele.innerHTML = `
@@ -14,6 +14,9 @@ function onExe(){
 			    <td>${d['unit_price']}</td>
 			  `;
 			res.appendChild(ele);
-	  	})
+	  	})}
+	  	else{
+	  		console.log(data);
+	  	}
 	  });
 }

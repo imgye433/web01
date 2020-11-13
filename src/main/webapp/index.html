@@ -20,12 +20,9 @@ table {
 </head>
 <body>
 	<div>
-		<select id="sd">
-		<option value="1" selected>Select</option> 
-        <option value="2">Delete</option> 
-        </select> id, name, category id, unit price from products where id = <input
-			style='width: 50px' 'type='text' id='pid'>
-		<button onclick="onExe()">execute</button>
+		Select id, name, category id, unit price from products where id = <input
+			style='width: 50px' 'type='text' id='pid1'>
+		<button onclick="onExe(1)">execute</button>
 	</div>
 	<table id='results'>
 		<tr>
@@ -35,5 +32,12 @@ table {
 			<th>unit price</th>
 		</tr>
 	</table>
+	<hr/>
+	<div>
+		Delete from products where id = <input
+			style='width: 50px' 'type='text' id='pid2'>
+		<button onclick="onExe(2)">execute</button>
+		<p>The DELETE statement conflicted with the REFERENCE constraint</p>
+		</div>
 </body>
 </html>

@@ -43,10 +43,10 @@ public class CrudServlet extends HttpServlet {
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
 		String pid=request.getParameter("pid");
 		String sd=request.getParameter("sd");
-		String str = "SELECT ";
+		String str = "SELECT ProductID, ProductName, CategoryID, UnitPrice ";
 		switch(sd) {
 		case "1":{
-			str  = "SELECT ";
+			str  = "SELECT ProductID, ProductName, CategoryID, UnitPrice ";
 			break;
 		}
 		case "2":{
@@ -60,7 +60,7 @@ public class CrudServlet extends HttpServlet {
 		try {
 			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             Connection conn = DriverManager.getConnection(connectionUrl);
-		    try (PreparedStatement ps = conn.prepareStatement(str+"ProductID, ProductName, CategoryID, UnitPrice FROM dbo.Products WHERE ProductID=?")) {
+		    try (PreparedStatement ps = conn.prepareStatement(str+"FROM dbo.Products WHERE ProductID=?")) {
 		    	ps.setObject(1, pid);
 		    	try (ResultSet rs = ps.executeQuery()) {
 		            while (rs.next()) {
