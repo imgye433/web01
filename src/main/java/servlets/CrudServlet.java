@@ -9,7 +9,10 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,13 +20,16 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import db.MysqlConnection;
 import models.Product;
 
 /**
  * Servlet implementation class CrudServlet
  */
+@WebServlet("/")
 public class CrudServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	MysqlConnection conn;
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -31,6 +37,11 @@ public class CrudServlet extends HttpServlet {
 	public CrudServlet() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+
+	public void init() {
+		conn = new MysqlConnection();
+		conn.checkFactory();
 	}
 
 	/**
@@ -41,56 +52,27 @@ public class CrudServlet extends HttpServlet {
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 //		response.getWriter().append("Served at: ").append(request.getContextPath());
-		String pid=request.getParameter("pid");
-		String sd=request.getParameter("sd");
-		String str = "SELECT ProductID, ProductName, CategoryID, UnitPrice ";
-		switch(sd) {
-		case "1":{
-			str  = "SELECT ProductID, ProductName, CategoryID, UnitPrice ";
+
+		String action = request.getServletPath();
+
+//		try {
+		switch (action) {
+//			case "/createproduct":
+//				createProduct(request, response);
+//				break;
+		case "/deleteproduct":
+			deleteProduct(request, response);
+			break;
+//			case "/editproduct":
+//				editProduct(request, response);
+//				break;
+		default:
+			listProducts(request, response);
 			break;
 		}
-		case "2":{
-			str  = "DELETE ";
-			break;
-		}
-		}
-		String connectionUrl = "jdbc:sqlserver://localhost:1433;" + "database=Northwind;" + "user=root;"
-				+ "password=abcd1234;";
-		JSONArray array = new JSONArray();
-		try {
-			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            Connection conn = DriverManager.getConnection(connectionUrl);
-		    try (PreparedStatement ps = conn.prepareStatement(str+"FROM dbo.Products WHERE ProductID=?")) {
-		    	ps.setObject(1, pid);
-		    	try (ResultSet rs = ps.executeQuery()) {
-		            while (rs.next()) {
-		                int id = rs.getInt(1); 
-		                String name = rs.getString(2);
-		                int catId = rs.getInt(3);
-		                BigDecimal price = rs.getBigDecimal(4);
-		                Product prod = new Product();
-		                prod.setPid(id);
-		                prod.setPname(name);
-		                prod.setCatId(catId);
-		                prod.setUprice(price);
-		                JSONObject obj = prod.toJSONObject();
-		                array.put(obj);
-		            }
-		        }
-		    }
-		    conn.close();
-		}
-		// Handle any errors that may have occurred.
-		catch (SQLException e) {
-			e.printStackTrace();
-		}catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		response.setHeader("Access-Control_Allow_Origin", "*");
-		PrintWriter out = response.getWriter();
-		out.print(array);
-		out.close();
+//		} catch (SQLException ex) {
+//			throw new ServletException(ex);
+//		}
 	}
 
 	/**
@@ -100,48 +82,75 @@ public class CrudServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		StringBuilder sBuilder = new StringBuilder();
-//		try (BufferedReader reader = request.getReader()) {
-//			String line = null;
-//			while ((line = reader.readLine()) != null) {
-//				sBuilder.append(line);
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		String pid=sBuilder.toString();
-//		String connectionUrl = "jdbc:sqlserver://localhost:1433;" + "database=Northwind;" + "user=root;"
-//				+ "password=abcd1234;";
-//		JSONArray array = new JSONArray();
+		String action = request.getServletPath();
+
 //		try {
-//			Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//            Connection conn = DriverManager.getConnection(connectionUrl);
-//		    try (PreparedStatement ps = conn.prepareStatement("SELECT ProductID, ProductName, CategoryID, UnitPrice FROM dbo.Products WHERE ProductID=?")) {
-//		    	ps.setObject(1, pid);
-//		    	try (ResultSet rs = ps.executeQuery()) {
-//		            while (rs.next()) {
-//		                int id = rs.getInt(1); 
-//		                String name = rs.getString(2);
-//		                int catId = rs.getInt(3);
-//		                BigDecimal price = rs.getBigDecimal(4);
-//		                JSONObject obj = new Product(id, name, catId, price).toJSONObject();
-//		                array.put(obj);
-//		            }
-//		        }
-//		    }
-//		    conn.close();
+		switch (action) {
+		case "/createproduct":
+			createProduct(request, response);
+			break;
+//			case "/deleteproduct":
+//				deleteProduct(request, response);
+//				break;
+		case "/editproduct":
+			editProduct(request, response);
+			break;
+		default:
+			listProducts(request, response);
+			break;
+		}
+//		} catch (SQLException ex) {
+//			throw new ServletException(ex);
 //		}
-//		// Handle any errors that may have occurred.
-//		catch (SQLException e) {
-//			e.printStackTrace();
-//		}catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		response.setHeader("Access-Control_Allow_Origin", "*");
-//		PrintWriter out = response.getWriter();
-//		out.print(array);
-//		out.close();
 	}
 
+	private void listProducts(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		JSONArray productList = conn.listProducts();
+		response.setHeader("Access-Control_Allow_Origin", "*");
+		PrintWriter out = response.getWriter();
+		out.print(productList);
+		out.close();
+	}
+
+	private void deleteProduct(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		String pid = request.getParameter("pid");
+		conn.deleteProduct(Integer.parseInt(pid));
+		listProducts(request, response);
+	}
+
+	private void createProduct(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		StringBuilder sBuilder = new StringBuilder();
+		try (BufferedReader reader = request.getReader()) {
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sBuilder.append(line);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		JSONObject obj = new JSONObject(sBuilder.toString());
+		conn.addProduct(obj.getString("name"), obj.getFloat("price"));
+		listProducts(request, response);
+	}
+
+	private void editProduct(HttpServletRequest request, HttpServletResponse response)
+			throws IOException, ServletException {
+		StringBuilder sBuilder = new StringBuilder();
+		try (BufferedReader reader = request.getReader()) {
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sBuilder.append(line);
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		JSONObject obj = new JSONObject(sBuilder.toString());
+		conn.updateProduct(obj.getInt("pid"), obj.getFloat("price"));
+		listProducts(request, response);
+	}
 }

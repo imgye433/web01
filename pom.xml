@@ -7,11 +7,18 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/com.microsoft.sqlserver/mssql-jdbc -->
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
 		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<version>9.1.0.jre15-preview</version>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<version>5.4.23.Final</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>8.0.22</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -20,10 +27,13 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.json/json -->
-		<!--<dependency>
+		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20200518</version>
-		</dependency>-->
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<!--<dependency> <groupId>org.json</groupId> <artifactId>json</artifactId> 
+			<version>20200518</version> </dependency> -->
 	</dependencies>
 </project>

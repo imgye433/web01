@@ -1,51 +1,49 @@
 package models;
 
-import java.math.BigDecimal;
-import java.util.Set;
+import javax.persistence.*;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+@Entity
+@Table(name = "products")
 public class Product {
-	int pid;
-	String pname;
-	int catId;
-	BigDecimal uprice;
+	@Id
+	@GeneratedValue
+	@Column(name = "product_id")
+	private int id;
+
+	@Column(name = "product_name")
+	private String name;
+
+	@Column(name = "unit_price")
+	private float price;
 
 	public Product() {
 	}
 
-	public int getPid() {
-		return pid;
+	public int getId() {
+		return id;
 	}
 
-	public void setPid(int pid) {
-		this.pid = pid;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public String getPname() {
-		return pname;
+	public String getName() {
+		return name;
 	}
 
-	public void setPname(String pname) {
-		this.pname = pname;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public int getCatId() {
-		return catId;
+	public float getPrice() {
+		return price;
 	}
 
-	public void setCatId(int catId) {
-		this.catId = catId;
-	}
-
-	public BigDecimal getUprice() {
-		return uprice;
-	}
-
-	public void setUprice(BigDecimal uprice) {
-		this.uprice = uprice;
+	public void setPrice(float price) {
+		this.price = price;
 	}
 
 	public JSONObject toJSONObject() {
@@ -57,10 +55,9 @@ public class Product {
 		}
 		JSONObject obj = new JSONObject();
 		try {
-			obj.put("product_id", pid);
-			obj.put("product_name", pname);
-			obj.put("category_id", catId);
-			obj.put("unit_price", uprice);
+			obj.put("product_id", id);
+			obj.put("product_name", name);
+			obj.put("unit_price", price);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
